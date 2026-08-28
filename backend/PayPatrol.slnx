@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PayPatrol.Application/PayPatrol.Application.csproj" />
+  <Project Path="PayPatrol.Domain/PayPatrol.Domain.csproj" />
+  <Project Path="PayPatrol.Infrastructure/PayPatrol.Infrastructure.csproj" />
+  <Project Path="PayPatrol/PayPatrol.Api.csproj" />
+</Solution>
