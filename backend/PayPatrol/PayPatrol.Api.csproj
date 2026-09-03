@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>feb3678a-828b-480d-8b2f-f4354a8d61ae</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PayPatrol.Application\PayPatrol.Application.csproj" />
+    <ProjectReference Include="..\PayPatrol.Infrastructure\PayPatrol.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
