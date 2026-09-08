@@ -1,18 +1,12 @@
-﻿
-using PayPatrol.Domain.Entities;
+﻿using PayPatrol.Domain.Entities;
 
 namespace PayPatrol.Application.DTOs
 {
-    public class SubscriptionDto
+    public class CreateSubscriptionDto
     {
-        public int Id { get; set; }
         public decimal Amount { get; set; }
         public DateTime NextPaymentDate { get; set; }
         public PaymentInterval Interval { get; set; }
-
         public int ServiceCatalogId { get; set; }
-        public string ServiceName { get; set; } = null!;
-
-        public string UserId { get; set; } = null!;
     }
 }
