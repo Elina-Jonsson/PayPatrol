@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PayPatrol.Application\PayPatrol.Application.csproj" />
     <ProjectReference Include="..\PayPatrol.Infrastructure\PayPatrol.Infrastructure.csproj" />
   </ItemGroup>

@@ -1,0 +1,44 @@
+﻿using PayPatrol.Application.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
+
+namespace PayPatrol.Infrastructure.Identity
+{
+    public class JwtTokenGenerator : IJwtTokenGenerator
+    {
+        private readonly JwtSettings _jwtSettings;
+        
+        public JwtTokenGenerator(JwtSettings jwtSettings)
+        {
+            _jwtSettings = jwtSettings;
+        }
+
+        public string GenerateToken(string userId, string email, string firstName, string? lastName)
+        {
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.GivenName, firstName),
+            new Claim(ClaimTypes.Surname, lastName ?? string.Empty),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiresInMinutes),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+}
