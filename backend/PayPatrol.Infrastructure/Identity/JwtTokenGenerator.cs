@@ -16,16 +16,14 @@ namespace PayPatrol.Infrastructure.Identity
             _jwtSettings = jwtSettings;
         }
 
-        public string GenerateToken(string userId, string email, string firstName, string? lastName)
+        public string GenerateToken(string userId, string email)
         {
             var claims = new[]
             {
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.GivenName, firstName),
-            new Claim(ClaimTypes.Surname, lastName ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
