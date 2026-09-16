@@ -21,6 +21,14 @@ namespace PayPatrol.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Name = "Streaming" },
+                new Category { Id = 2, Name = "Träning" },
+                new Category { Id = 3, Name = "Mjukvara & Verktyg" },
+                new Category { Id = 4, Name = "Musik" },
+                new Category { Id = 5, Name = "Övrigt" }
+             );
         }
     }
 }

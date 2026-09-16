@@ -8,6 +8,8 @@ namespace PayPatrol.Infrastructure.Identity
         [MaxLength(50)]
         [Required]
         public string FirstName { get; set; } = null!;
-        public string? LastName { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string LastName { get; set; } = null!;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PayPatrol.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PayPatrol.Infrastructure.Data;
 namespace PayPatrol.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260911092340_SyncDbContext")]
+    partial class SyncDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,33 +174,6 @@ namespace PayPatrol.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Streaming"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Träning"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Mjukvara & Verktyg"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Musik"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Övrigt"
-                        });
                 });
 
             modelBuilder.Entity("PayPatrol.Domain.Entities.ServiceCatalog", b =>
