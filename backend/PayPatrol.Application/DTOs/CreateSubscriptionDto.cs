@@ -7,6 +7,7 @@ namespace PayPatrol.Application.DTOs
         public decimal Amount { get; set; }
         public DateTime NextPaymentDate { get; set; }
         public PaymentInterval Interval { get; set; }
-        public int ServiceCatalogId { get; set; }
+        public string Title { get; set; } = null!;
+        public int CategoryId { get; set; }
     }
 }

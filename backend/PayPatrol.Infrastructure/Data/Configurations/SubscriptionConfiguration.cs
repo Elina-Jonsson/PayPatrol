@@ -14,9 +14,16 @@ namespace PayPatrol.Infrastructure.Data.Configurations
             builder.Property(s => s.UserId)
                 .IsRequired();
 
+            builder.HasOne(s => s.Category)
+                .WithMany()
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(s => s.ServiceCatalog)
-                .WithMany(s => s.Subscriptions)
-                .HasForeignKey(s => s.ServiceCatalogId);
+                .WithMany()
+                .HasForeignKey(s => s.ServiceCatalogId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

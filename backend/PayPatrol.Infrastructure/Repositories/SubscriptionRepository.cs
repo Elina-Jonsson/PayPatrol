@@ -17,7 +17,7 @@ namespace PayPatrol.Infrastructure.Repositories
         public async Task<IEnumerable<Subscription>> GetAllSubscriptionsByUserIdAsync(string userId)
         {
             return await _context.Subscriptions
-                .Include(s => s.ServiceCatalog)
+                .Include(s => s.Category)
                 .Where(s => s.UserId == userId)
                 .AsNoTracking()
                 .ToListAsync();
@@ -26,7 +26,7 @@ namespace PayPatrol.Infrastructure.Repositories
         public async Task<Subscription?> GetSubscriptionByIdAsync(int id, string userId)
         {
             return await _context.Subscriptions
-                .Include(s => s.ServiceCatalog)
+                .Include(s => s.Category)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
         }

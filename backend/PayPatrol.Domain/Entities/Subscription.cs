@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PayPatrol.Domain.Entities
+﻿namespace PayPatrol.Domain.Entities
 {
     public class Subscription
     {
@@ -10,10 +6,13 @@ namespace PayPatrol.Domain.Entities
         public decimal Amount { get; set; }
         public DateTime NextPaymentDate { get; set; }
         public PaymentInterval Interval { get; set; }
+        public string Title { get; set; } = null!;
 
         // FK to ServiceCatalog & navigation property
-        public int ServiceCatalogId { get; set; }
-        public ServiceCatalog ServiceCatalog { get; set; } = null!;
+        public int? ServiceCatalogId { get; set; }
+        public ServiceCatalog? ServiceCatalog { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; } = null!;
 
         // FK to User
         public string UserId { get; set; } = null!;

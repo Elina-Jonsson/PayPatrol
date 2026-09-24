@@ -24,12 +24,28 @@ namespace PayPatrol.Api.Controllers
         // API to test if the user is authenticated and have a cookie with a JWT token
         [HttpGet("me")]
         [Authorize] 
-        public IActionResult GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
 
-            return Ok(new { UserId = userId, Email = email });
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName
+            });
         }
 
         [AllowAnonymous]
@@ -101,7 +117,16 @@ namespace PayPatrol.Api.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("jwt");
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                Expires = DateTimeOffset.UtcNow.AddDays(-1)
+            };
+
+            Response.Cookies.Append("jwt", "", cookieOptions);
             return Ok(new { Message = "Logged out successfully." });
         }
 
@@ -111,8 +136,9 @@ namespace PayPatrol.Api.Controllers
             {
                 HttpOnly = true,  // JS cannot access the cookie
                 Secure = true,    // Cookie is only sent over HTTPS
-                SameSite = SameSiteMode.Lax,  // Cookie is sent on same-site requests and top-level navigation
-                Expires = DateTimeOffset.UtcNow.AddMinutes(60)  // Set the expiration time for the cookie
+                SameSite = SameSiteMode.None,  // Cookie is sent on same-site requests and top-level navigation
+                Expires = DateTimeOffset.UtcNow.AddMinutes(60),  // Set the expiration time for the cookie
+                Path = "/"
             };
 
             Response.Cookies.Append("jwt", token, cookieOptions);

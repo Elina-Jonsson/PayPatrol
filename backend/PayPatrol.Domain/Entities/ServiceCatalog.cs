@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PayPatrol.Domain.Entities
+﻿namespace PayPatrol.Domain.Entities
 {
     public class ServiceCatalog
     {
@@ -14,6 +10,6 @@ namespace PayPatrol.Domain.Entities
         public Category Category { get; set; } = null!;
 
         // Navigation property for Subscriptions
-        public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        //public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     }
 }

@@ -22,7 +22,7 @@ namespace PayPatrol
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+                    policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -32,9 +32,6 @@ namespace PayPatrol
 
             var app = builder.Build();
 
-            app.UseMiddleware<JwtCookieMiddlewere>();
-            app.UseMiddleware<ExceptionHandlingMiddlewere>();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -42,9 +39,12 @@ namespace PayPatrol
                 app.MapScalarApiReference();
             }
 
+            app.UseCors("AllowFrontend");
+
             app.UseHttpsRedirection();
 
-            app.UseCors("AllowFrontend");
+            app.UseMiddleware<JwtCookieMiddlewere>();
+            app.UseMiddleware<ExceptionHandlingMiddlewere>();
 
             app.UseAuthentication();
             app.UseAuthorization();

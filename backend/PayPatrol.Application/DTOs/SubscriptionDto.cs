@@ -10,8 +10,9 @@ namespace PayPatrol.Application.DTOs
         public DateTime NextPaymentDate { get; set; }
         public PaymentInterval Interval { get; set; }
 
-        public int ServiceCatalogId { get; set; }
-        public string ServiceName { get; set; } = null!;
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+        public string Title { get; set; } = null!;
 
         public string UserId { get; set; } = null!;
     }

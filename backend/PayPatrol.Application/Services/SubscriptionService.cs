@@ -23,8 +23,9 @@ namespace PayPatrol.Application.Services
                 Amount = s.Amount,
                 NextPaymentDate = s.NextPaymentDate,
                 Interval = s.Interval,
-                ServiceCatalogId = s.ServiceCatalogId,
-                ServiceName = s.ServiceCatalog.Name,
+                Title = s.Title,            
+                CategoryId = s.CategoryId,
+                CategoryName = s.Category?.Name ?? "Unknown",
                 UserId = s.UserId
             });
         }
@@ -42,8 +43,9 @@ namespace PayPatrol.Application.Services
                 Amount = subscription.Amount,
                 NextPaymentDate = subscription.NextPaymentDate,
                 Interval = subscription.Interval,
-                ServiceCatalogId = subscription.ServiceCatalogId,
-                ServiceName = subscription.ServiceCatalog.Name,
+                CategoryId = subscription.CategoryId,
+                CategoryName = subscription.Category?.Name ?? "Övrigt",
+                Title = subscription.Title,
                 UserId = subscription.UserId
             };
         }
@@ -55,7 +57,8 @@ namespace PayPatrol.Application.Services
                 Amount = dto.Amount,
                 NextPaymentDate = dto.NextPaymentDate,
                 Interval = dto.Interval,
-                ServiceCatalogId = dto.ServiceCatalogId,
+                Title = dto.Title,
+                CategoryId = dto.CategoryId,
                 UserId = userId
             };
             var createdSubscription = await _repository.CreateSubscriptionAsync(subscription);
@@ -66,8 +69,9 @@ namespace PayPatrol.Application.Services
                 Amount = createdSubscription.Amount,
                 NextPaymentDate = createdSubscription.NextPaymentDate,
                 Interval = createdSubscription.Interval,
-                ServiceCatalogId = createdSubscription.ServiceCatalogId,
-                ServiceName = createdSubscription.ServiceCatalog.Name,
+                Title = createdSubscription.Title,
+                CategoryId = createdSubscription.CategoryId,
+                CategoryName = createdSubscription.Category?.Name ?? "Unknown",
                 UserId = createdSubscription.UserId
             };
         }
@@ -88,7 +92,8 @@ namespace PayPatrol.Application.Services
             existingSubscription.Amount = dto.Amount;
             existingSubscription.NextPaymentDate = dto.NextPaymentDate;
             existingSubscription.Interval = dto.Interval;
-            existingSubscription.ServiceCatalogId = dto.ServiceCatalogId;
+            existingSubscription.Title = dto.Title;
+            existingSubscription.CategoryId = dto.CategoryId;
 
             return await _repository.UpdateSubscriptionAsync(existingSubscription);
         }
@@ -98,10 +103,13 @@ namespace PayPatrol.Application.Services
             return await _repository.DeleteSubscriptionAsync(id, userId);
         }
 
+        /// Calculates and compiles a financial summary of all subscriptions for a specific user.
         public async Task<SubscriptionSummaryDto> GetSubscriptionSummaryAsync(string userId)
         {
+            // Retrieve all active subscriptions for the given user from the repository
             var userSubscriptions = await _repository.GetAllSubscriptionsByUserIdAsync(userId);
 
+            // Helper function to normalize costs to a monthly amount based on interval
             decimal CalculateMonthlyCost(decimal amount, PaymentInterval interval)
             {
                 return interval == PaymentInterval.Yearly ? amount / 12m : amount;
@@ -109,8 +117,9 @@ namespace PayPatrol.Application.Services
 
             var totalMonthly = userSubscriptions.Sum(s => CalculateMonthlyCost(s.Amount, s.Interval));
 
+            // Group expenses by category and calculate normalized monthly/yearly totals per group
             var costsByCategory = userSubscriptions
-                .GroupBy(s => s.ServiceCatalog?.Category?.Name ?? "Övrigt")
+                .GroupBy(s => s.Category?.Name ?? "Unknown")
                 .Select(group => new CategoryCostDto
                 {
                     CategoryName = group.Key,
@@ -120,6 +129,7 @@ namespace PayPatrol.Application.Services
                 .OrderByDescending(c => c.MonthlyCost)
                 .ToList();
 
+            // Construct and return the final aggregated summary DTO rounded to 2 decimal   
             return new SubscriptionSummaryDto
             {
                 TotalMonthlyCost = Math.Round(totalMonthly, 2),
