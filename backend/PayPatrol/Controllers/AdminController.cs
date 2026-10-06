@@ -22,6 +22,7 @@ namespace PayPatrol.Api.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _context.Users
+                .AsNoTracking()
                 .Select(u => new UserDto
                 {
                     Id = u.Id,
